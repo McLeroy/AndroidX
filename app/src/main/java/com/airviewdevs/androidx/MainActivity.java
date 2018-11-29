@@ -49,13 +49,17 @@ public class MainActivity extends AppCompatActivity implements TodosAdapter.Todo
     @OnClick(R.id.fab)
     public void onLoadTodos() {
         todosAdapter.setTodos(new ArrayList<>());
-        todoViewModel.getTodos().loadData();
+        todoViewModel.loadFromNetwork();
     }
 
     private Observer<Resource<List<Todo>>> observer =  new Observer<Resource<List<Todo>>>() {
         @Override
         public void onChanged(Resource<List<Todo>> listResource) {
             DebugUtils.debug(MainActivity.class, "Data Changed: "+listResource.getStatus().name());
+            progressBar.setVisibility(listResource.getStatus().equals(Resource.Status.LOADING)
+                    ? View.VISIBLE : View.GONE);
+            if (listResource.getData() != null)
+                todosAdapter.setTodos(listResource.getData());
         }
     };
 

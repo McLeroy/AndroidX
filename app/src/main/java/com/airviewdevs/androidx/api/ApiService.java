@@ -2,7 +2,6 @@ package com.airviewdevs.androidx.api;
 
 import com.airviewdevs.androidx.ApiResponse;
 import com.airviewdevs.androidx.models.Todo;
-import com.airviewdevs.androidx.utils.NetworkResourceLiveData;
 
 import java.util.List;
 
@@ -14,5 +13,8 @@ public interface ApiService {
     String ENDPOINT = "https://jsonplaceholder.typicode.com/";
 
     @GET("todos")
-    NetworkResourceLiveData<ApiResponse<List<Todo>>> getTodos();
+    LiveData<ApiResponse<List<Todo>>> getTodos();
+
+    @GET("todos")
+    Call<List<Todo>>getTodosList();
 }

@@ -7,6 +7,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
 import retrofit2.CallAdapter;
 import retrofit2.Retrofit;
 
@@ -16,7 +17,7 @@ public class LiveDataCallAdapterFactory extends CallAdapter.Factory {
     @Override
     public CallAdapter<?, ?> get(Type returnType, Annotation[] annotations, Retrofit retrofit) {
         DebugUtils.debug(LiveDataCallAdapterFactory.class, "Raw type: "+CallAdapter.Factory.getRawType(returnType).getSimpleName());
-        if (CallAdapter.Factory.getRawType(returnType) != NetworkResourceLiveData.class) {
+        if (CallAdapter.Factory.getRawType(returnType) != LiveData.class) {
             return null;
         }
         Type observableType = CallAdapter.Factory.getParameterUpperBound(0, (ParameterizedType) returnType);

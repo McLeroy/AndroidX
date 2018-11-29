@@ -9,12 +9,13 @@ import com.airviewdevs.androidx.api.exception.ResolvableApiException;
 import java.lang.reflect.Type;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 import retrofit2.Call;
 import retrofit2.CallAdapter;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LiveDataCallAdapter<R> implements CallAdapter<R, NetworkResourceLiveData<ApiResponse<R>>> {
+public class LiveDataCallAdapter<R> implements CallAdapter<R, LiveData<ApiResponse<R>>> {
     private final Type responseType;
 
     public LiveDataCallAdapter(Type responseType) {
@@ -29,13 +30,13 @@ public class LiveDataCallAdapter<R> implements CallAdapter<R, NetworkResourceLiv
 
     @NonNull
     @Override
-    public NetworkResourceLiveData<ApiResponse<R>> adapt(@NonNull Call<R> call) {
-        return new NetworkResourceLiveData<ApiResponse<R>>() {
+    public LiveData<ApiResponse<R>> adapt(@NonNull Call<R> call) {
+        return new LiveData<ApiResponse<R>>() {
             private  boolean started = false;
 
             @Override
-            public void loadData() {
-                super.loadData();
+            public void onActive() {
+                super.onActive();
                 DebugUtils.debug(LiveDataCallAdapter.class, "Loading data");
                 call.enqueue(new Callback<R>() {
                     @Override
