@@ -1,7 +1,5 @@
 package com.airviewdevs.androidx.utils;
 
-import com.airviewdevs.androidx.api.ApiResponse;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

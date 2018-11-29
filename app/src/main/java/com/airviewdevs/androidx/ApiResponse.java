@@ -1,0 +1,48 @@
+package com.airviewdevs.androidx;
+
+import com.airviewdevs.androidx.api.exception.ResolvableApiException;
+
+import androidx.annotation.NonNull;
+
+/**
+ * Common class used by API responses.
+ * @param <T> the type of the response object
+</T> */
+public class ApiResponse <T> {
+
+    public static <T>ApiErrorResponse<T>create(ResolvableApiException ex) {
+        return new ApiErrorResponse<T>(ex);
+    }
+
+    public static <T>ApiErrorResponse<T>create(String message, int code) {
+        return new ApiErrorResponse<T>(message, code);
+    }
+
+    public static <T>ApiResponse<T>create(@NonNull T response) {
+        return new ApiSuccessResponse<T>(response);
+    }
+
+    public static final class ApiSuccessResponse<T> extends ApiResponse<T>{
+        private final T body;
+
+        public ApiSuccessResponse(T body) {
+            this.body = body;
+        }
+
+        public T getBody() {
+            return body;
+        }
+    }
+
+    public static final class ApiErrorResponse<T> extends ApiResponse<T> {
+        private final ResolvableApiException exception;
+
+        public ApiErrorResponse(String message, int code) {
+            this(new ResolvableApiException(message, code));
+        }
+
+        public ApiErrorResponse(ResolvableApiException exception) {
+            this.exception = exception;
+        }
+    }
+}
