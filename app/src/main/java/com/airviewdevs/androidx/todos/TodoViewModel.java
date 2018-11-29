@@ -2,6 +2,7 @@ package com.airviewdevs.androidx.todos;
 
 import com.airviewdevs.androidx.ApiResponse;
 import com.airviewdevs.androidx.App;
+import com.airviewdevs.androidx.api.NetworkBoundResource;
 import com.airviewdevs.androidx.api.Resource;
 import com.airviewdevs.androidx.models.Todo;
 import com.airviewdevs.androidx.utils.NetworkResourceLiveData;
@@ -18,34 +19,20 @@ import androidx.lifecycle.ViewModel;
 
 public class TodoViewModel extends ViewModel {
     private MediatorLiveData<Resource<List<Todo>>>mediatorLiveData;
-    private NetworkResourceLiveData<Resource<List<Todo>>>todosLiveData;
+
     public TodoViewModel() {
         mediatorLiveData = new MediatorLiveData<>();
     }
 
     public NetworkResourceLiveData<Resource<List<Todo>>>getTodos(){
-        NetworkResourceLiveData<ApiResponse<List<Todo>>> networkCall = App.getApiService().getTodos();
-        mediatorLiveData.addSource(networkCall, new Observer<ApiResponse<List<Todo>>>() {
+
+        return new NetworkBoundResource<List<Todo>, List<Todo>>() {
+
             @Override
-            public void onChanged(ApiResponse<List<Todo>> listApiResponse) {
-                mediatorLiveData.removeSource(networkCall);
+            public NetworkResourceLiveData<Resource<List<Todo>>> asLiveData() {
+                return null;
             }
-        });
-        mediatorLiveData.addSource(App.getApiService().getTodos(), new Observer<ApiResponse<List<Todo>>>() {
-            @Override
-            public void onChanged(ApiResponse<List<Todo>> listApiResponse) {
-                if (listApiResponse instanceof ApiResponse.ApiSuccessResponse) {
-                    ApiResponse.ApiSuccessResponse<List<Todo>> successResponse = (ApiResponse.ApiSuccessResponse)listApiResponse;
-                    mediatorLiveData.addSource(convertToLiveData(successResponse.getBody()), new Observer<List<Todo>>() {
-                        @Override
-                        public void onChanged(List<Todo> todos) {
-                            mediatorLiveData.setValue(Resource.success(todos));
-                        }
-                    });
-                }
-            }
-        });
-        return networkCall;
+        }.asLiveData();
     }
 
     @WorkerThread
