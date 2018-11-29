@@ -14,5 +14,5 @@ public interface ApiService {
     String ENDPOINT = "https://jsonplaceholder.typicode.com/";
 
     @GET("todos")
-    NetworkResourceLiveData<ApiResponse<Todo>> getTodos(long id);
+    NetworkResourceLiveData<ApiResponse<List<Todo>>> getTodos(long id);
 }

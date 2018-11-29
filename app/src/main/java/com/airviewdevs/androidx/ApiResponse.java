@@ -3,6 +3,7 @@ package com.airviewdevs.androidx;
 import com.airviewdevs.androidx.api.exception.ResolvableApiException;
 
 import androidx.annotation.NonNull;
+import retrofit2.Response;
 
 /**
  * Common class used by API responses.
@@ -18,8 +19,8 @@ public class ApiResponse <T> {
         return new ApiErrorResponse<T>(message, code);
     }
 
-    public static <T>ApiResponse<T>create(@NonNull T response) {
-        return new ApiSuccessResponse<T>(response);
+    public static <T>ApiResponse<T>create(@NonNull Response<T>response) {
+        return new ApiSuccessResponse<T>(response.body());
     }
 
     public static final class ApiSuccessResponse<T> extends ApiResponse<T>{

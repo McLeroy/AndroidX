@@ -1,11 +1,12 @@
 package com.airviewdevs.androidx.utils;
 
+import com.airviewdevs.androidx.ApiResponse;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 import androidx.annotation.Nullable;
-import androidx.lifecycle.LiveData;
 import retrofit2.CallAdapter;
 import retrofit2.Retrofit;
 
@@ -14,7 +15,7 @@ public class LiveDataCallAdapterFactory extends CallAdapter.Factory {
     @Nullable
     @Override
     public CallAdapter<?, ?> get(Type returnType, Annotation[] annotations, Retrofit retrofit) {
-        if (CallAdapter.Factory.getRawType(returnType) != LiveData.class) {
+        if (CallAdapter.Factory.getRawType(returnType) != NetworkResourceLiveData.class) {
             return null;
         }
         Type observableType = CallAdapter.Factory.getParameterUpperBound(0, (ParameterizedType) returnType);

@@ -1,7 +1,9 @@
 package com.airviewdevs.androidx.todos;
 
+import com.airviewdevs.androidx.App;
+import com.airviewdevs.androidx.api.Resource;
 import com.airviewdevs.androidx.models.Todo;
-import com.airviewdevs.androidx.respository.TodoRepository;
+import com.airviewdevs.androidx.utils.NetworkResourceLiveData;
 
 import java.util.List;
 
@@ -9,13 +11,14 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 public class TodoViewModel extends ViewModel {
-    private TodoRepository todoRepository;
-
+    private NetworkResourceLiveData<List<Todo>>todosLiveData;
     public TodoViewModel() {
-        todoRepository = TodoRepository.get();
+
     }
 
-    public LiveData<Resource<List<Todo>>>getTodos(){
-        return todoRepository.getTodos();
+    public NetworkResourceLiveData<Resource<List<Todo>>>getTodos(){
+        if (todosLiveData == null)
+            todosLiveData = new NetworkResourceLiveData<>();
+        App.getApiService().getTodos(1).observe();
     }
 }

@@ -37,6 +37,10 @@ public class Resolvable extends BaseModel {
         return ex;
     }
 
+    public void setStatusCode(int statusCode) {
+        this.statusCode = statusCode;
+    }
+
     public int getStatusCode() {
         return statusCode;
     }
