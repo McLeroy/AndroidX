@@ -36,14 +36,19 @@ public class ApiResponse <T> {
     }
 
     public static final class ApiErrorResponse<T> extends ApiResponse<T> {
-        private final ResolvableApiException exception;
+        private final ResolvableApiException ex;
 
         public ApiErrorResponse(String message, int code) {
             this(new ResolvableApiException(message, code));
         }
 
-        public ApiErrorResponse(ResolvableApiException exception) {
-            this.exception = exception;
+        public ApiErrorResponse(ResolvableApiException ex) {
+            this.ex = ex;
+        }
+
+
+        public ResolvableApiException getEx() {
+            return ex;
         }
     }
 }

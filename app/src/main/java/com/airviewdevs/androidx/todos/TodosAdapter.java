@@ -37,7 +37,7 @@ public class TodosAdapter extends RecyclerView.Adapter<TodosAdapter.TodoHolder>{
     public void onBindViewHolder(@NonNull TodoHolder holder, int position) {
         Todo todo = todos.get(position);
         holder.titleText.setText(todo.getTitle());
-        holder.doneCheckbox.setChecked(todo.isCompleted());
+        holder.statusView.setVisibility(todo.isCompleted() ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class TodosAdapter extends RecyclerView.Adapter<TodosAdapter.TodoHolder>{
     class TodoHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         @BindView(R.id.title_text)TextView titleText;
-        @BindView(R.id.done_checkbox)CheckBox doneCheckbox;
+        @BindView(R.id.status_view)View statusView;
         TodoHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);

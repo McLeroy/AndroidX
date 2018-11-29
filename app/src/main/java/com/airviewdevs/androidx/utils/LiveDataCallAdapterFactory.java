@@ -18,6 +18,7 @@ public class LiveDataCallAdapterFactory extends CallAdapter.Factory {
     public CallAdapter<?, ?> get(Type returnType, Annotation[] annotations, Retrofit retrofit) {
         DebugUtils.debug(LiveDataCallAdapterFactory.class, "Raw type: "+CallAdapter.Factory.getRawType(returnType).getSimpleName());
         if (CallAdapter.Factory.getRawType(returnType) != LiveData.class) {
+            DebugUtils.debug(LiveDataCallAdapterFactory.class, "Data not live returning");
             return null;
         }
         Type observableType = CallAdapter.Factory.getParameterUpperBound(0, (ParameterizedType) returnType);

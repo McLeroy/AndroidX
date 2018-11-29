@@ -22,7 +22,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity implements TodosAdapter.TodosCallback {
+public class MainActivity extends AppCompatActivity
+        implements TodosAdapter.TodosCallback, Observer<Resource<List<Todo>>> {
 
     @BindView(R.id.recycler_view)RecyclerView recyclerView;
     @BindView(R.id.progress_bar)View progressBar;
@@ -42,29 +43,36 @@ public class MainActivity extends AppCompatActivity implements TodosAdapter.Todo
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(todosAdapter = new TodosAdapter(this));
         todoViewModel = ViewModelProviders.of(this).get(TodoViewModel.class);
-        todoViewModel.getTodos().observe(this, observer);
+        todoViewModel.getTodos().observe(this, this);
     }
 
 
     @OnClick(R.id.fab)
     public void onLoadTodos() {
         todosAdapter.setTodos(new ArrayList<>());
-        todoViewModel.loadFromNetwork();
+        todoViewModel.getTodos().observe(this, this);
     }
 
-    private Observer<Resource<List<Todo>>> observer =  new Observer<Resource<List<Todo>>>() {
+    @Override
+    public void onChanged(Resource<List<Todo>> listResource) {
+        DebugUtils.debug(MainActivity.class, "Data Changed: "+listResource.getStatus().name());
+        progressBar.setVisibility(listResource.getStatus().equals(Resource.Status.LOADING)
+                ? View.VISIBLE : View.GONE);
+        if (listResource.getData() != null)
+            todosAdapter.setTodos(listResource.getData());
+    }
+
+    private Observer<Resource<Todo>>todoObserver = new Observer<Resource<Todo>>() {
         @Override
-        public void onChanged(Resource<List<Todo>> listResource) {
-            DebugUtils.debug(MainActivity.class, "Data Changed: "+listResource.getStatus().name());
-            progressBar.setVisibility(listResource.getStatus().equals(Resource.Status.LOADING)
-                    ? View.VISIBLE : View.GONE);
-            if (listResource.getData() != null)
-                todosAdapter.setTodos(listResource.getData());
+        public void onChanged(Resource<Todo> todoResource) {
+            if (todoResource.getData() == null)return;
+            DebugUtils.debug(MainActivity.class, "Todo response: "+todoResource.getData().toString());
         }
     };
 
     @Override
     public void todoClicked(Todo todo) {
         DebugUtils.debug(MainActivity.class, "Todo clicked: "+todo.toString());
+        todoViewModel.getTodo(todo.getId()).observe(this, todoObserver);
     }
 }

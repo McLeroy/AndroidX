@@ -2,11 +2,16 @@ package com.airviewdevs.androidx.todos;
 
 import com.airviewdevs.androidx.ApiResponse;
 import com.airviewdevs.androidx.App;
+import com.airviewdevs.androidx.api.NetworkBasedResponse;
 import com.airviewdevs.androidx.api.Resource;
 import com.airviewdevs.androidx.models.Todo;
+import com.airviewdevs.androidx.respositories.TodoRepository;
+import com.airviewdevs.androidx.utils.DebugUtils;
 
 import java.util.List;
 
+import androidx.annotation.WorkerThread;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -17,42 +22,18 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class TodoViewModel extends ViewModel {
-    private MutableLiveData<Resource<List<Todo>>>liveData;
-    private MediatorLiveData<Resource<List<Todo>>>mediatorLiveData;
-
+    private final TodoRepository todoRepository;
 
     public TodoViewModel() {
-        liveData = new MutableLiveData<>();
-        mediatorLiveData = new MediatorLiveData<>();
+        todoRepository = TodoRepository.get();
     }
 
-    public LiveData<Resource<List<Todo>>>getTodos(){
-        return liveData;
+    public LiveData<Resource<List<Todo>>> getTodos() {
+        return todoRepository.getTodos();
     }
 
-    public void loadFromNetwork() {
-        liveData.setValue(Resource.loading(null));
-        mediatorLiveData.addSource(App.getApiService().getTodos(), new Observer<ApiResponse<List<Todo>>>() {
-            @Override
-            public void onChanged(ApiResponse<List<Todo>> listApiResponse) {
-                if (listApiResponse instanceof ApiResponse.ApiSuccessResponse) {
-                    ApiResponse.ApiSuccessResponse successResponse = (ApiResponse.ApiSuccessResponse)listApiResponse
-                    liveData.setValue();
-                }
-            }
-        });
-        App.getApiService().getTodosList().enqueue(new Callback<List<Todo>>() {
-            @Override
-            public void onResponse(Call<List<Todo>> call, Response<List<Todo>> response) {
-                if (response.body() != null)
-                    liveData.setValue(Resource.success(response.body()));
-            }
-
-            @Override
-            public void onFailure(Call<List<Todo>> call, Throwable t) {
-                liveData.setValue(Resource.error(t.getMessage(), 500));
-            }
-        });
+    public LiveData<Resource<Todo>>getTodo(long id) {
+        return todoRepository.getTodo(id);
     }
 
 }
