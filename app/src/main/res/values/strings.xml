@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Android X</string>
+    <string name="load_todos">Load Todos</string>
+</resources>
