@@ -34,8 +34,9 @@ public class LiveDataCallAdapter<R> implements CallAdapter<R, NetworkResourceLiv
             private  boolean started = false;
 
             @Override
-            protected void loadData() {
+            public void loadData() {
                 super.loadData();
+                DebugUtils.debug(LiveDataCallAdapter.class, "Loading data");
                 call.enqueue(new Callback<R>() {
                     @Override
                     public void onResponse(@NonNull Call<R> call, @NonNull Response<R> response) {

@@ -15,6 +15,7 @@ public class LiveDataCallAdapterFactory extends CallAdapter.Factory {
     @Nullable
     @Override
     public CallAdapter<?, ?> get(Type returnType, Annotation[] annotations, Retrofit retrofit) {
+        DebugUtils.debug(LiveDataCallAdapterFactory.class, "Raw type: "+CallAdapter.Factory.getRawType(returnType).getSimpleName());
         if (CallAdapter.Factory.getRawType(returnType) != NetworkResourceLiveData.class) {
             return null;
         }

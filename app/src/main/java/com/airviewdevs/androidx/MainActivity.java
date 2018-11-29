@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.airviewdevs.androidx.api.Resource;
 import com.airviewdevs.androidx.models.Todo;
 import com.airviewdevs.androidx.todos.TodoViewModel;
 import com.airviewdevs.androidx.todos.TodosAdapter;
@@ -41,15 +42,22 @@ public class MainActivity extends AppCompatActivity implements TodosAdapter.Todo
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(todosAdapter = new TodosAdapter(this));
         todoViewModel = ViewModelProviders.of(this).get(TodoViewModel.class);
-
+        todoViewModel.getTodos().observe(this, observer);
     }
 
 
     @OnClick(R.id.fab)
     public void onLoadTodos() {
         todosAdapter.setTodos(new ArrayList<>());
-
+        todoViewModel.getTodos().loadData();
     }
+
+    private Observer<Resource<List<Todo>>> observer =  new Observer<Resource<List<Todo>>>() {
+        @Override
+        public void onChanged(Resource<List<Todo>> listResource) {
+            DebugUtils.debug(MainActivity.class, "Data Changed: "+listResource.getStatus().name());
+        }
+    };
 
     @Override
     public void todoClicked(Todo todo) {

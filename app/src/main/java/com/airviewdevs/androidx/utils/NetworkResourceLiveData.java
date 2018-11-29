@@ -10,7 +10,7 @@ public class NetworkResourceLiveData<T> extends LiveData<T> {
         loadData();
     }
 
-    protected  void loadData() {
+    public void loadData() {
 
     }
 }
